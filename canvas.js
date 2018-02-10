@@ -7,8 +7,8 @@ const mouse = {
   x: undefined,
   y: undefined
 }
-const maxRadius = 80
-const maxScale = 3
+
+const maxScale = 2.5
 
 const colorArray = [
   '#62eb93',
@@ -42,7 +42,7 @@ const heartMsgArr = [
   'SWEET\nTALK',
   'TRUE\nLOVE',
   'XOXO',
-  'LET’S\nKISS',
+  'LET\'S\nKISS',
   'MELT\nMY <3',
   'SWEET\nSTUFF',
   'OCCUPY\nMY <3',
@@ -64,6 +64,11 @@ const heartMsgArr = [
   'YUM\nYUM',
   'YOU\nROCK'
 ]
+let totalHearts = Math.floor((window.innerHeight * window.innerWidth) / 1500)
+if(totalHearts > 600) {
+  totalHearts = 600
+}
+console.log(totalHearts)
 
 window.addEventListener('mousemove', function (event) {
   mouse.x = event.x
@@ -144,7 +149,7 @@ function Heart(x, y, dx, dy, scale) {
     c.fillStyle = this.color
     c.fill();
     c.fillStyle = "#f00"
-    c.font = `${this.scale*20}px serif`
+    c.font = `${this.scale*20}px Arial, Helvetica, sans-serif`
     c.textAlign = 'center'
     c.textBaseline = "top"
     fillTextMultiLine(c,this.msg,this.x,this.y)
@@ -161,13 +166,13 @@ function Heart(x, y, dx, dy, scale) {
     this.y += this.dy
 
     // interactivity
-    if (mouse.x - this.x < 50 && mouse.x - this.x > -50
-      && mouse.y - this.y < 50 && mouse.y - this.y > -50) {
+    if (mouse.x - this.x < 40 && mouse.x - this.x > -40
+      && mouse.y - this.y < 40 && mouse.y - this.y > -40) {
       if (this.scale < maxScale) {
-        this.scale += .1
+        this.scale += .07
       }
     } else if (this.scale > this.minScale) {
-      this.scale -= .1
+      this.scale -= .03
     }
 
     this.draw()
@@ -175,7 +180,7 @@ function Heart(x, y, dx, dy, scale) {
 }
 
 const heartArr = []
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < totalHearts; i++) {
   let scale = Number((Math.random() * .1 + .05).toFixed(2))
   let x = Math.random() * (innerWidth - scale * 55 * 2) + (scale * 55)
   let y = Math.random() * (innerHeight - scale * 62 * 2) + (scale * 62)
