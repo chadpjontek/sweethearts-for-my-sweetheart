@@ -1,15 +1,14 @@
+// set canvas equal to screen size
 const canvas = document.querySelector('canvas')
 canvas.width = window.innerWidth
 canvas.height = window.innerHeight
+// globals
 const c = canvas.getContext('2d')
-
+const maxScale = 2.5
 const mouse = {
   x: undefined,
   y: undefined
 }
-
-const maxScale = 2.5
-
 const colorArray = [
   '#62eb93',
   '#f790b8',
@@ -18,7 +17,6 @@ const colorArray = [
   '#fe9d54',
   '#9ad1fe'
 ]
-
 const heartMsgArr = [
   '#\nLOVE',
   'LIVE N\nLOVE',
@@ -64,45 +62,40 @@ const heartMsgArr = [
   'YUM\nYUM',
   'YOU\nROCK'
 ]
+// set total hearts based on screen area (max 600)
 let totalHearts = Math.floor((window.innerHeight * window.innerWidth) / 1500)
 if(totalHearts > 600) {
   totalHearts = 600
 }
-console.log(totalHearts)
-
+// add event listeners for mouse, touch, and screen resize
 window.addEventListener('mousemove', function (event) {
   mouse.x = event.x
   mouse.y = event.y
 })
-
 window.addEventListener('resize', function () {
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
 })
-
 function startup() {
   canvas.addEventListener("touchstart", handleStart, false)
   canvas.addEventListener("touchend", handleEnd, false)
   canvas.addEventListener("touchcancel", handleCancel, false)
   canvas.addEventListener("touchmove", handleMove, false)
 }
-
+// handle touch events
 let touch = null
-
 function handleStart(evt) {
   evt.preventDefault()
   touch = evt.changedTouches[0]
   mouse.x = touch.clientX
   mouse.y = touch.clientY
 }
-
 function handleMove(evt) {
   evt.preventDefault()
   touch = evt.changedTouches[0]
   mouse.x = touch.clientX
   mouse.y = touch.clientY
 }
-
 function handleEnd(evt) {
   evt.preventDefault()
   touch = evt.changedTouches[0]
@@ -110,7 +103,6 @@ function handleEnd(evt) {
   mouse.y = undefined
   touch = null
 }
-
 function handleCancel(evt) {
   evt.preventDefault()
   touch = evt.changedTouches[0]
@@ -118,7 +110,7 @@ function handleCancel(evt) {
   mouse.y = undefined
   touch = null
 }
-
+// function to draw multiline text
 function fillTextMultiLine(ctx, text, x, y) {
   var lineHeight = ctx.measureText("M").width * 1.2;
   var lines = text.split("\n");
@@ -127,17 +119,19 @@ function fillTextMultiLine(ctx, text, x, y) {
     y += lineHeight;
   }
 }
-
-function Heart(x, y, dx, dy, scale) {
-  this.x = x
-  this.y = y
-  this.dx = dx
-  this.dy = dy
-  this.scale = scale
-  this.minScale = scale
-  this.color = colorArray[Math.floor(Math.random() * colorArray.length)]
-  this.msg = heartMsgArr[Math.floor(Math.random() * heartMsgArr.length)]
-  this.draw = function () {
+// <3
+class Heart {
+  constructor(x, y, dx, dy, scale) {
+    this.x = x
+    this.y = y
+    this.dx = dx
+    this.dy = dy
+    this.scale = scale
+    this.minScale = scale
+    this.color = colorArray[Math.floor(Math.random() * colorArray.length)]
+    this.msg = heartMsgArr[Math.floor(Math.random() * heartMsgArr.length)]
+  }
+  draw() {
     c.beginPath();
     c.moveTo(this.x, this.y);
     c.bezierCurveTo((0*this.scale + this.x), (-3*this.scale + this.y), (-5*this.scale + this.x), (-15*this.scale + this.y), (-25*this.scale + this.x), (-15*this.scale + this.y));
@@ -153,9 +147,9 @@ function Heart(x, y, dx, dy, scale) {
     c.textAlign = 'center'
     c.textBaseline = "top"
     fillTextMultiLine(c,this.msg,this.x,this.y)
-    
   }
-  this.update = function () {
+  update() {
+    // bounces
     if (this.x + 55*this.scale > innerWidth || this.x - 55*this.scale < 0) {
       this.dx = -this.dx
     }
@@ -164,7 +158,6 @@ function Heart(x, y, dx, dy, scale) {
     }
     this.x += this.dx
     this.y += this.dy
-
     // interactivity
     if (mouse.x - this.x < 40 && mouse.x - this.x > -40
       && mouse.y - this.y < 40 && mouse.y - this.y > -40) {
@@ -174,11 +167,11 @@ function Heart(x, y, dx, dy, scale) {
     } else if (this.scale > this.minScale) {
       this.scale -= .03
     }
-
+    // redraw changes
     this.draw()
   }
 }
-
+// create all random hearts
 const heartArr = []
 for (let i = 0; i < totalHearts; i++) {
   let scale = Number((Math.random() * .1 + .05).toFixed(2))
@@ -186,10 +179,9 @@ for (let i = 0; i < totalHearts; i++) {
   let y = Math.random() * (innerHeight - scale * 62 * 2) + (scale * 62)
   let dx = (Math.random() - 0.5) * 2
   let dy = (Math.random() - 0.5) * 2
-
   heartArr.push(new Heart(x, y, dx, dy, scale))
 }
-
+// animate the hearts
 function animate() {
   requestAnimationFrame(animate)
   c.clearRect(0, 0, innerWidth, innerHeight)
@@ -197,5 +189,4 @@ function animate() {
     i.update()
   }
 }
-
 animate()
