@@ -169,7 +169,7 @@ function Heart(x, y, dx, dy, scale) {
     if (mouse.x - this.x < 40 && mouse.x - this.x > -40
       && mouse.y - this.y < 40 && mouse.y - this.y > -40) {
       if (this.scale < maxScale) {
-        this.scale += .07
+        this.scale += .09
       }
     } else if (this.scale > this.minScale) {
       this.scale -= .03
