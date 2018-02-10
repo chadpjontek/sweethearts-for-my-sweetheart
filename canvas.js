@@ -75,11 +75,50 @@ window.addEventListener('resize', function () {
   canvas.height = window.innerHeight
 })
 
+function startup() {
+  canvas.addEventListener("touchstart", handleStart, false)
+  canvas.addEventListener("touchend", handleEnd, false)
+  canvas.addEventListener("touchcancel", handleCancel, false)
+  canvas.addEventListener("touchmove", handleMove, false)
+}
+
+let touch = null
+
+function handleStart(evt) {
+  evt.preventDefault()
+  touch = evt.changedTouches[0]
+  mouse.x = touch.clientX
+  mouse.y = touch.clientY
+}
+
+function handleMove(evt) {
+  evt.preventDefault()
+  touch = evt.changedTouches[0]
+  mouse.x = touch.clientX
+  mouse.y = touch.clientY
+}
+
+function handleEnd(evt) {
+  evt.preventDefault()
+  touch = evt.changedTouches[0]
+  mouse.x = undefined
+  mouse.y = undefined
+  touch = null
+}
+
+function handleCancel(evt) {
+  evt.preventDefault()
+  touch = evt.changedTouches[0]
+  mouse.x = undefined
+  mouse.y = undefined
+  touch = null
+}
+
 function fillTextMultiLine(ctx, text, x, y) {
   var lineHeight = ctx.measureText("M").width * 1.2;
   var lines = text.split("\n");
   for (var i = 0; i < lines.length; ++i) {
-    ctx.fillText(lines[i], x, y);
+    ctx.fillText(lines[i], x, y + lineHeight/2);
     y += lineHeight;
   }
 }
@@ -136,7 +175,7 @@ function Heart(x, y, dx, dy, scale) {
 }
 
 const heartArr = []
-for (let i = 0; i < 300; i++) {
+for (let i = 0; i < 200; i++) {
   let scale = Number((Math.random() * .1 + .05).toFixed(2))
   let x = Math.random() * (innerWidth - scale * 55 * 2) + (scale * 55)
   let y = Math.random() * (innerHeight - scale * 62 * 2) + (scale * 62)
