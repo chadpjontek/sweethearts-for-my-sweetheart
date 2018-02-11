@@ -64,7 +64,7 @@ const heartMsgArr = [
 ]
 // set total hearts based on screen area (max 600)
 let totalHearts = Math.floor((window.innerHeight * window.innerWidth) / 1500)
-if(totalHearts > 600) {
+if (totalHearts > 600) {
   totalHearts = 600
 }
 // add event listeners for mouse, touch, and screen resize
@@ -115,7 +115,7 @@ function fillTextMultiLine(ctx, text, x, y) {
   var lineHeight = ctx.measureText("M").width * 1.2;
   var lines = text.split("\n");
   for (var i = 0; i < lines.length; ++i) {
-    ctx.fillText(lines[i], x, y + lineHeight/2);
+    ctx.fillText(lines[i], x, y + lineHeight / 2);
     y += lineHeight;
   }
 }
@@ -134,26 +134,26 @@ class Heart {
   draw() {
     c.beginPath();
     c.moveTo(this.x, this.y);
-    c.bezierCurveTo((0*this.scale + this.x), (-3*this.scale + this.y), (-5*this.scale + this.x), (-15*this.scale + this.y), (-25*this.scale + this.x), (-15*this.scale + this.y));
-    c.bezierCurveTo((-55*this.scale + this.x), (-15*this.scale + this.y), (-55*this.scale + this.x), (22.5*this.scale + this.y), (-55*this.scale + this.x), (22.5*this.scale + this.y));
-    c.bezierCurveTo((-55*this.scale + this.x), (40*this.scale + this.y), (-35*this.scale + this.x), (62*this.scale + this.y), (0*this.scale + this.x), (80*this.scale + this.y));
-    c.bezierCurveTo((35*this.scale + this.x), (62*this.scale + this.y), (55*this.scale + this.x), (40*this.scale + this.y), (55*this.scale + this.x), (22.5*this.scale + this.y));
-    c.bezierCurveTo((55*this.scale + this.x), (22.5*this.scale + this.y), (55*this.scale + this.x), (-15*this.scale + this.y), (25*this.scale + this.x), (-15*this.scale + this.y));
-    c.bezierCurveTo((10*this.scale + this.x), (-15*this.scale + this.y), (0*this.scale + this.x), (-3*this.scale + this.y), (0*this.scale + this.x), (20*this.scale + this.y));
+    c.bezierCurveTo((0 * this.scale + this.x), (-3 * this.scale + this.y), (-5 * this.scale + this.x), (-15 * this.scale + this.y), (-25 * this.scale + this.x), (-15 * this.scale + this.y));
+    c.bezierCurveTo((-55 * this.scale + this.x), (-15 * this.scale + this.y), (-55 * this.scale + this.x), (22.5 * this.scale + this.y), (-55 * this.scale + this.x), (22.5 * this.scale + this.y));
+    c.bezierCurveTo((-55 * this.scale + this.x), (40 * this.scale + this.y), (-35 * this.scale + this.x), (62 * this.scale + this.y), (0 * this.scale + this.x), (80 * this.scale + this.y));
+    c.bezierCurveTo((35 * this.scale + this.x), (62 * this.scale + this.y), (55 * this.scale + this.x), (40 * this.scale + this.y), (55 * this.scale + this.x), (22.5 * this.scale + this.y));
+    c.bezierCurveTo((55 * this.scale + this.x), (22.5 * this.scale + this.y), (55 * this.scale + this.x), (-15 * this.scale + this.y), (25 * this.scale + this.x), (-15 * this.scale + this.y));
+    c.bezierCurveTo((10 * this.scale + this.x), (-15 * this.scale + this.y), (0 * this.scale + this.x), (-3 * this.scale + this.y), (0 * this.scale + this.x), (20 * this.scale + this.y));
     c.fillStyle = this.color
     c.fill();
     c.fillStyle = "#f00"
-    c.font = `${this.scale*20}px Arial, Helvetica, sans-serif`
+    c.font = `${this.scale * 20}px Arial, Helvetica, sans-serif`
     c.textAlign = 'center'
     c.textBaseline = "top"
-    fillTextMultiLine(c,this.msg,this.x,this.y)
+    fillTextMultiLine(c, this.msg, this.x, this.y)
   }
   update() {
     // bounces
-    if (this.x + 55*this.scale > innerWidth || this.x - 55*this.scale < 0) {
+    if (this.x + 55 * this.scale > innerWidth || this.x - 55 * this.scale < 0) {
       this.dx = -this.dx
     }
-    if (this.y + 62*this.scale > innerHeight || this.y - 62*this.scale < 0) {
+    if (this.y + 62 * this.scale > innerHeight || this.y - 62 * this.scale < 0) {
       this.dy = -this.dy
     }
     this.x += this.dx
@@ -190,3 +190,10 @@ function animate() {
   }
 }
 animate()
+// check if browser supports service workers
+// if so register service worker to go Offline First!
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker
+    .register('/sw.js')
+    .then(() => {console.log("This sweet service worker is registered!"); })
+}
