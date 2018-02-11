@@ -11,7 +11,6 @@ self.addEventListener('install', e => {
     )
   )
 })
-// change
 // fetch from the cache if available and then
 // check network for new version to cache, otherwise get from network
 self.addEventListener('fetch', event => {
